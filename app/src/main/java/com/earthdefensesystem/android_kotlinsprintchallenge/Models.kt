@@ -9,8 +9,8 @@ data class Video(
     val name: String,
     val short_description: String,
     val video_files: List<VideoFiles>,
-    val youtube_id: String,
     @Optional
+    val youtube_id: String,
     val credits: String,
     val collection: String,
     val mission: String,
