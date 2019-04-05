@@ -8,6 +8,7 @@ import android.widget.SeekBar
 import android.widget.VideoView
 import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
+import java.lang.Runnable
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,12 +30,25 @@ class MainActivity : AppCompatActivity() {
             if (success) {
                 val videoData = Json.nonstrict.parse(VideoData.serializer(), result)
                 val videoUrl = Uri.parse(videoData.getVideoUrl())
+                seekbar.max = videoView.duration
                 withContext(Dispatchers.Main) {
                     videoView.setVideoURI(videoUrl)
                     videoView.start()
                 }
             }
+
+            seekbar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                    if (fromUser) {
+                        videoView.seekTo(progress)
+                    }
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar) {}
+                override fun onStopTrackingTouch(seekBar: SeekBar) {}
+            })
         }
+
 
         playButton.text = "Stop"
         playButton.setOnClickListener {
