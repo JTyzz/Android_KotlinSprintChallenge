@@ -13,10 +13,8 @@ import java.net.URL
 
 
 object NetworkAdapter{
-    private const val TIMEOUT = 3000
-
     @WorkerThread
-    suspend fun httpGetRequest(urlString: String): Pair<Boolean, String> {
+    fun httpGetRequest(urlString: String): Pair<Boolean, String> {
         var result = ""
         var success = false
         var connection: HttpURLConnection? = null
@@ -58,40 +56,5 @@ object NetworkAdapter{
             }
             return success to result
         }
-    }
-
-    @WorkerThread
-    suspend fun httpImageRequest(urlString: String): Bitmap? {
-        var image: Bitmap? = null
-        var stream: InputStream? = null
-        var connection: HttpURLConnection? = null
-        try {
-            val url = URL(urlString)
-            connection = url.openConnection() as HttpURLConnection
-            connection.readTimeout = TIMEOUT
-            connection.connectTimeout = TIMEOUT
-            connection.connect()
-            val responseCode = connection.responseCode
-            if (responseCode == HttpURLConnection.HTTP_OK) {
-                stream = connection.inputStream
-                if (stream != null) {
-                    image = BitmapFactory.decodeStream(stream)
-                }
-            } else {
-                throw IOException("HTTP Error code: $responseCode")
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-            }
-            connection?.disconnect()
-        }
-        return image
     }
 }

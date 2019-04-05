@@ -5,11 +5,10 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
-data class Video(
+data class VideoData(
     val name: String,
     val short_description: String,
     val video_files: List<VideoFiles>,
-    @Optional
     val youtube_id: String,
     val credits: String,
     val collection: String,
@@ -20,6 +19,9 @@ data class Video(
 {fun getVideoUrl():String{
     return video_files.first().file_url
     }
+}
+fun VideoData.getVideo(): VideoFiles? {
+    return this.video_files?.get(1)
 }
 
 @Serializable
