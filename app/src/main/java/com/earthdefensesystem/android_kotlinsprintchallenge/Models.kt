@@ -20,9 +20,6 @@ data class VideoData(
     return video_files.first().file_url
     }
 }
-fun VideoData.getVideo(): VideoFiles? {
-    return this.video_files?.get(1)
-}
 
 @Serializable
 data class VideoFiles(
